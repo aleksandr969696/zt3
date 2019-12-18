@@ -29,14 +29,14 @@ def task1(u_init_str, f_str, g_str, h_str, r):
 
     V = FunctionSpace(mesh, 'P', 1)
 
-    u_init = Expression(ccode(u_init_str), degree=2)
+    u_init = Expression(u_init_str, degree=2)
 
     print(mesh)
     bc = DirichletBC(V, u_init, boundary)
     u = TrialFunction(V)
     v = TestFunction(V)
-    f = Expression(ccode(f_str), degree=2, alpha=alpha_value)
-    g = Expression(ccode(g_str), degree=2)
+    f = Expression(f_str, degree=2, alpha=alpha_value)
+    g = Expression(g_str, degree=2)
     a = dot(grad(u), grad(v)) * dx + alpha * u * v * dx
 
     L = f * v * dx + g * v * ds

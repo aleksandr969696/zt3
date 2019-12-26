@@ -171,3 +171,6 @@ def main(r):
     plt.plot(time_arr, errors_L2, label='L2 errors')
     plt.legend()
     plt.savefig(f'errors.png')
+
+
+main(1)

@@ -86,7 +86,7 @@ def main(r):
     dt = T / 100
     u_e = sympy.sin(x) ** 2 + sympy.cos(y) ** 2
 
-    circle = Circle(Point(0, 0), radius_exact)
+    circle = Circle(Point(0, 0), r)
     mesh = generate_mesh(circle, 30)
     V = FunctionSpace(mesh, 'P', 2)
     u_D = Expression(ccode(u_e), degree=2)

@@ -45,9 +45,9 @@ def plot(f, is_accurate, to_save):
     ax_plot = plt.tripcolor(triangulation, facecolors=zfaces, edgecolors='k')
     fig.colorbar(ax_plot, ax=ax)
     if is_accurate:
-        plt.title('Accurate U calculation')
+        plt.title('Точное U')
     else:
-        plt.title('Approximate U calculation')
+        plt.title('Вычисленное U')
     if to_save:
         plt.savefig(f'{f.__str__()}.png')
     plt.close()
@@ -68,8 +68,8 @@ def plot_solutions(u_e, u, mesh):
     z_faces = np.asarray([u(cell.midpoint()) for cell in cells(mesh)])
     ax2_plot = ax2.tripcolor(triangulation, facecolors=z_faces, edgecolors='k')
 
-    ax1.set_title('Accurate U calculation')
-    ax2.set_title('Approximate U calculation')
+    ax1.set_title('Точное U')
+    ax2.set_title('Вычисленное U')
     fig.colorbar(ax1_plot, ax=ax1)
     fig.colorbar(ax2_plot, ax=ax2)
     fig.canvas.draw()
@@ -165,12 +165,12 @@ for n in range(steps_number):
     errors_L2.append(errornorm(u_e, u, 'L2'))
     errors_max.append(np.abs(u_e.vector().get_local() - u.vector().get_local()).max())
 
-get_animation(plots, 'my_plots')
+get_animation(plots, 'Efimov_plot')
 
 time_arr = np.linspace(dt, T, steps_number)
 plt.plot(time_arr, errors_max, label='Max errors')
 plt.plot(time_arr, errors_L2, label='L2 errors')
 plt.legend()
-plt.savefig(f'errors.png')
+plt.savefig(f'Efimov_errors.png')
 
 

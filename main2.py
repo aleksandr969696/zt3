@@ -86,7 +86,8 @@ def main(r):
     dt = T / 100
     u_e = sympy.sin(x) ** 2 + sympy.cos(y) ** 2
 
-    mesh = generate_mesh(Circle(Point(0, 0), r), 30)
+    circle = Circle(Point(0, 0), radius_exact)
+    mesh = generate_mesh(circle, 30)
     V = FunctionSpace(mesh, 'P', 2)
     u_D = Expression(ccode(u_e), degree=2)
     f = -get_lap(u_e) + alpha * u_e

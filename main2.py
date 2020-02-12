@@ -47,11 +47,11 @@ def plot(f, is_accurate, to_save):
     if is_accurate:
         plt.title('Точное U')
         if to_save:
-            plt.savefig(f'{accurate}.png')
+            plt.savefig('accurate.png')
     else:
         plt.title('Вычисленное U')
         if to_save:
-            plt.savefig(f'{calculated}.png')
+            plt.savefig('calculated.png')
     plt.close()
     return fig
 

@@ -46,10 +46,12 @@ def plot(f, is_accurate, to_save):
     fig.colorbar(ax_plot, ax=ax)
     if is_accurate:
         plt.title('Точное U')
+        if to_save:
+            plt.savefig(f'{accurate}.png')
     else:
         plt.title('Вычисленное U')
-    if to_save:
-        plt.savefig(f'{f.__str__()}.png')
+        if to_save:
+            plt.savefig(f'{calculated}.png')
     plt.close()
     return fig
 
@@ -65,9 +67,10 @@ def plot_solutions(u_e, u, mesh):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11, 4))
     z_faces = np.asarray([u_e(cell.midpoint()) for cell in cells(mesh)])
     ax1_plot = ax1.tripcolor(triangulation, facecolors=z_faces, edgecolors='k')
+    ax1.set_clim(-3, 3)
     z_faces = np.asarray([u(cell.midpoint()) for cell in cells(mesh)])
     ax2_plot = ax2.tripcolor(triangulation, facecolors=z_faces, edgecolors='k')
-
+    ax2.set_clim(-3, 3)
     ax1.set_title('Точное U')
     ax2.set_title('Вычисленное U')
     fig.colorbar(ax1_plot, ax=ax1)
@@ -81,10 +84,14 @@ def plot_solutions(u_e, u, mesh):
 
 # Problem implementing
 # def main(r):
+r = 2
 alpha_val = 1
 T = 1.0
 dt = T / 100
-u_e = sympy.sin(x) ** 2 + sympy.cos(y) ** 2
+
+# u_e = sympy.sin(x) ** 2 + sympy.cos(y) ** 2
+# u_e = x**2+y**2
+u_e = x**2-y**2
 
 circle = Circle(Point(0, 0), r)
 mesh = generate_mesh(circle, 30)
@@ -122,8 +129,11 @@ plot(u_D, is_accurate=True, to_save=True)
 
 # Thermal conductivity
 steps_number = 50
+
 # u_e = sympy.sin(x)**2 + sympy.cos(y)**2 + t
-u_e = x * sympy.cos(t ** 2) + t * sympy.sin(y)
+# u_e = x * sympy.cos(t ** 2) + t * sympy.sin(y)
+# u_e = x**2 + y**2 + t
+u_e = x**2 - y**2 + t
 
 u_D = Expression(ccode(u_e), degree=2, t=0)
 bc = DirichletBC(V, u_D, boundary)
@@ -132,7 +142,7 @@ u = TrialFunction(V)
 v = TestFunction(V)
 
 f = Expression(ccode(sympy.diff(u_e, t) - alpha * get_lap(u_e)), alpha=alpha_val, degree=2, t=0)
-gradient = get_gradient(u_e)
+gradient = get_grad(u_e)
 g = Expression(
     f'{ccode(gradient[0])} * x[0] / sqrt(x[0]*x[0] + x[1]*x[1]) + {ccode(gradient[1])} * x[1] / sqrt(x[0]*x[0] + x[1]*x[1])',
     degree=2, t=0
